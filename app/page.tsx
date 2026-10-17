@@ -19,11 +19,11 @@ interface CartItem {
 export default function Home() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedWatch, setSelectedWatch] = useState<Watch | null>(null);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
+  // By default isko true rakha hai taake web khulne par sab se pehle login modal aaye
   const [currentUser, setCurrentUser] = useState<any>(null);
 
-  // Yahan apna WhatsApp number likhein (Country code ke sath, maslan: 923001234567)
-  const ADMIN_WHATSAPP_NUMBER = "923001234567";
+  const ADMIN_WHATSAPP_NUMBER = "923001234567"; // Apna number yahan likh dena
 
   const addToCart = (watch: Watch) => {
     setCart(prev => {
@@ -37,7 +37,6 @@ export default function Home() {
 
   const totalCartItems = cart.reduce((acc, item) => acc + item.qty, 0);
 
-  // Direct WhatsApp Notification / Order Sender Function
   const handleWhatsAppOrder = (watchName: string, price: number) => {
     const text = `🚨 *New Watch Order Received!*\n\n⏱ *Product:* ${watchName}\n💰 *Price:* $${price}\n👤 *Customer:* ${currentUser ? currentUser.name : 'Guest User'}\n\nPlease confirm my order!`;
     const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
@@ -46,42 +45,51 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col justify-between">
-      <Navbar
-        totalCartItems={totalCartItems}
-        onOpenCart={() => { }}
-        onOpenLogin={() => setIsLoginOpen(true)}
-      />
 
-      {currentUser && (
-        <div className="bg-amber-500/10 border-b border-amber-500/20 py-2 px-6 text-center text-xs text-amber-300">
-          Welcome back, <span className="font-bold">{currentUser.name}</span>! (Signed in via {currentUser.provider})
-        </div>
-      )}
-
-      <Hero />
-
-      <ProductGrid
-        watches={WATCHES}
-        onQuickView={(w: Watch) => setSelectedWatch(w)}
-        onAddToCart={addToCart}
-      />
-
-      {selectedWatch && (
-        <OrderModal
-          watch={selectedWatch}
-          onClose={() => setSelectedWatch(null)}
-          onOrderWhatsApp={handleWhatsAppOrder}
-        />
-      )}
-
-      {isLoginOpen && (
+      {/* Agar user logged in nahi hai, toh sab se pehle LoginScreen dikhaye ga aur baaki website hide rakhega */}
+      {!currentUser ? (
         <LoginScreen
-          onClose={() => setIsLoginOpen(false)}
+          onClose={() => { }} // User tab tak close nahi kar sakta jab tak login na kare
           onLoginSuccess={(user: { name: string; provider: string }) => setCurrentUser(user)}
         />
+      ) : (
+        <>
+          <Navbar
+            totalCartItems={totalCartItems}
+            onOpenCart={() => { }}
+            onOpenLogin={() => setCurrentUser(null)} // Logout button ke taur par kaam karega
+          />
+
+          <div className="bg-amber-500/10 border-b border-amber-500/20 py-2 px-6 text-center text-xs text-amber-300 flex justify-between items-center max-w-7xl mx-auto w-full">
+            <span>Welcome back, <span className="font-bold">{currentUser.name}</span>! (Signed in via {currentUser.provider})</span>
+            <button
+              onClick={() => setCurrentUser(null)}
+              className="text-red-400 hover:underline text-xs font-semibold"
+            >
+              Sign Out
+            </button>
+          </div>
+
+          <Hero />
+
+          <ProductGrid
+            watches={WATCHES}
+            onQuickView={(w: Watch) => setSelectedWatch(w)}
+            onAddToCart={addToCart}
+          />
+
+          {selectedWatch && (
+            <OrderModal
+              watch={selectedWatch}
+              onClose={() => setSelectedWatch(null)}
+              onOrderWhatsApp={handleWhatsAppOrder}
+            />
+          )}
+
+          <Footer />
+        </>
       )}
 
-      <Footer />
     </div>
   );
 }
