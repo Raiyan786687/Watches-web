@@ -2,26 +2,30 @@
 
 import React, { useState } from 'react';
 import { WATCHES } from '@/data/watches';
+
+type Watch = (typeof WATCHES)[number];
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import ProductGrid from '@/components/ProductGrid';
 import OrderModal from '@/components/OrderModal';
 import LoginScreen from '@/components/LoginScreen';
-import Chatbot from '@/components/Chatbot';
 import Footer from '@/components/Footer';
 
 interface CartItem {
-  watch: (typeof WATCHES)[number];
+  watch: Watch;
   qty: number;
 }
 
 export default function Home() {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [selectedWatch, setSelectedWatch] = useState<(typeof WATCHES)[number] | null>(null);
+  const [selectedWatch, setSelectedWatch] = useState<Watch | null>(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
 
-  const addToCart = (watch: (typeof WATCHES)[number]) => {
+  // Yahan apna WhatsApp number likhein (Country code ke sath, maslan: 923001234567)
+  const ADMIN_WHATSAPP_NUMBER = "923001234567";
+
+  const addToCart = (watch: Watch) => {
     setCart(prev => {
       const existing = prev.find(item => item.watch.id === watch.id);
       if (existing) {
@@ -33,9 +37,10 @@ export default function Home() {
 
   const totalCartItems = cart.reduce((acc, item) => acc + item.qty, 0);
 
+  // Direct WhatsApp Notification / Order Sender Function
   const handleWhatsAppOrder = (watchName: string, price: number) => {
-    const text = `Hello! I would like to order the watch: *${watchName}* ($${price}).`;
-    const whatsappUrl = `https://wa.me/923000000000?text=${encodeURIComponent(text)}`;
+    const text = `🚨 *New Watch Order Received!*\n\n⏱ *Product:* ${watchName}\n💰 *Price:* $${price}\n👤 *Customer:* ${currentUser ? currentUser.name : 'Guest User'}\n\nPlease confirm my order!`;
+    const whatsappUrl = `https://wa.me/${ADMIN_WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -57,7 +62,7 @@ export default function Home() {
 
       <ProductGrid
         watches={WATCHES}
-        onQuickView={(w: (typeof WATCHES)[number]) => setSelectedWatch(w)}
+        onQuickView={(w: Watch) => setSelectedWatch(w)}
         onAddToCart={addToCart}
       />
 
@@ -76,7 +81,6 @@ export default function Home() {
         />
       )}
 
-      <Chatbot />
       <Footer />
     </div>
   );

@@ -10,16 +10,6 @@ export const WATCHES = [
         description: '18k Rose Gold casing with open heart automatic movement and sapphire crystal.'
     },
     {
-        id: 'w2',
-        name: 'Onyx Stealth Automatic',
-        brand: 'VORTEX',
-        price: 890,
-        rating: 4.8,
-        category: 'Minimalist',
-        image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=800&q=80',
-        description: 'Matte black DLC coated titanium case with Swiss luminescent indices.'
-    },
-    {
         id: 'w3',
         name: 'Oceanic Diver 300M',
         brand: 'AURA',
@@ -38,16 +28,6 @@ export const WATCHES = [
         category: 'Classic',
         image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80',
         description: 'Handcrafted Italian leather band featuring sunburst champagne dial.'
-    },
-    {
-        id: 'w5',
-        name: 'Apex Tourbillon Limited',
-        brand: 'VORTEX',
-        price: 2400,
-        rating: 5.0,
-        category: 'Luxury',
-        image: 'https://images.unsplash.com/photo-1547996160-012745cc5836?auto=format&fit=crop&w=800&q=80',
-        description: 'Exquisite floating tourbillon cage with skeletonized dial face.'
     },
     {
         id: 'w6',
