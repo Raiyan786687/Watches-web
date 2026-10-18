@@ -1,54 +1,21 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
     try {
-        const { messages } = await req.json();
-        const apiKey = process.env.OPENROUTER_API_KEY;
+        const body = await req.json();
+        const userMessage = body.message || "Hello";
 
-        const systemPrompt = {
-            role: 'system',
-            content: `You are the VIP AI Sales Assistant for 'Chronos Luxury Watches'. 
-RULES:
-1. Keep answers extremely short, precise, and direct (1-2 sentences).
-2. When the user wants to buy or order a watch, strictly ask for these 3 details step-by-step or together:
-   - Full Name
-   - Phone Number
-   - Delivery Address
-3. Be polite and professional at all times.`
-        };
+        // Simple automated assistant response logic for watch store
+        let reply = "Welcome to ZevenWatches! How can I assist you with our luxury watch collection today?";
 
-        if (apiKey && !apiKey.includes('your-key')) {
-            try {
-                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${apiKey.trim()}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'openai/gpt-4o-mini',
-                        messages: [systemPrompt, ...messages],
-                        temperature: 0.3,
-                        max_tokens: 120,
-                    }),
-                });
-
-                const data = await response.json();
-                if (data.choices && data.choices[0] && data.choices[0].message) {
-                    return NextResponse.json(data);
-                }
-            } catch (err) {
-                // Fallback handled on frontend
-            }
+        if (userMessage.toLowerCase().includes("price") || userMessage.toLowerCase().includes("cost")) {
+            reply = "Our watches range from PKR 32,000 to PKR 68,000 with premium materials and warranty.";
+        } else if (userMessage.toLowerCase().includes("order") || userMessage.toLowerCase().includes("buy")) {
+            reply = "Aap koi bhi watch select kar ke Cart se direct WhatsApp par order confirm kar sakte hain!";
         }
 
-        return NextResponse.json({
-            choices: [{ message: { role: 'assistant', content: "Order place karne ke liye kripya apna Full Name, Phone Number, aur Delivery Address batayein." } }]
-        });
-
+        return NextResponse.json({ reply });
     } catch (error) {
-        return NextResponse.json({
-            choices: [{ message: { role: 'assistant', content: 'Order details ke liye Name, Phone, aur Address share karein.' } }]
-        });
+        return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }

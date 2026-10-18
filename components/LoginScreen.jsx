@@ -1,55 +1,38 @@
-'use client';
+"use client";
 
-import React from 'react';
+import { useState } from "react";
 
-export default function LoginScreen({ onClose, onLoginSuccess }) {
-    const handleSocialLogin = (provider) => {
-        // Simulate social login account selection
-        const mockUser = {
-            name: `Rayyan (${provider} User)`,
-            email: `user@${provider.toLowerCase()}.com`,
-            provider: provider
-        };
-        onLoginSuccess(mockUser);
-        onClose();
+export default function LoginScreen({ onLoginSuccess }) {
+    const [passcode, setPasscode] = useState("");
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (passcode === "1234") {
+            onLoginSuccess();
+        } else {
+            alert("Incorrect Passcode! Try 1234");
+        }
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 relative">
-                <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg">✕</button>
+        <div className="min-h-[70vh] flex items-center justify-center px-4">
+            <form onSubmit={handleSubmit} className="bg-slate-900 border border-slate-800 p-8 rounded-2xl w-full max-w-md shadow-2xl space-y-6 text-center">
+                <h2 className="text-2xl font-extrabold text-amber-400">Client Portal Login</h2>
+                <p className="text-xs text-slate-400">Enter your passcode to manage store items and prices live.</p>
 
-                <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold text-white mb-1">Welcome to Chrono Realm</h3>
-                    <p className="text-slate-400 text-xs">Choose your preferred provider to sign in instantly.</p>
-                </div>
+                <input
+                    type="password"
+                    placeholder="Enter Passcode (e.g. 1234)"
+                    value={passcode}
+                    onChange={(e) => setPasscode(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-center text-white text-lg tracking-widest focus:border-amber-400 outline-none"
+                    required
+                />
 
-                <div className="space-y-3">
-                    {/* Google Sign In */}
-                    <button
-                        onClick={() => handleSocialLogin('Google')}
-                        className="w-full bg-slate-950 hover:bg-slate-800 border border-slate-800 text-white font-medium py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-3"
-                    >
-                        <span className="text-red-400 font-bold">G</span> Sign in with Google
-                    </button>
-
-                    {/* Facebook Sign In */}
-                    <button
-                        onClick={() => handleSocialLogin('Facebook')}
-                        className="w-full bg-slate-950 hover:bg-slate-800 border border-slate-800 text-white font-medium py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-3"
-                    >
-                        <span className="text-blue-500 font-bold">f</span> Sign in with Facebook
-                    </button>
-
-                    {/* LinkedIn Sign In */}
-                    <button
-                        onClick={() => handleSocialLogin('LinkedIn')}
-                        className="w-full bg-slate-950 hover:bg-slate-800 border border-slate-800 text-white font-medium py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-3"
-                    >
-                        <span className="text-sky-400 font-bold">in</span> Sign in with LinkedIn
-                    </button>
-                </div>
-            </div>
+                <button type="submit" className="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition text-sm">
+                    Access Admin Dashboard
+                </button>
+            </form>
         </div>
     );
 }
