@@ -25,7 +25,7 @@ export default function AdminCMSPage() {
     const [description, setDescription] = useState("");
 
     useEffect(() => {
-        const saved = localStorage.getItem("royal_watches_db");
+        const saved = localStorage.getItem("royal_watches_new");
         if (saved) {
             setWatches(JSON.parse(saved));
         }
@@ -77,7 +77,7 @@ export default function AdminCMSPage() {
 
         const updated = [newWatch, ...watches];
         setWatches(updated);
-        localStorage.setItem("royal_watches_db", JSON.stringify(updated));
+        localStorage.setItem("royal_watches_new", JSON.stringify(updated));
 
         setName("");
         setBrand("");
@@ -91,7 +91,7 @@ export default function AdminCMSPage() {
         if (confirm("Delete this product?")) {
             const updated = watches.filter((w) => w.id !== id);
             setWatches(updated);
-            localStorage.setItem("royal_watches_db", JSON.stringify(updated));
+            localStorage.setItem("royal_watches_new", JSON.stringify(updated));
         }
     };
 
