@@ -130,7 +130,7 @@ export default function StorefrontPage() {
       )}
 
       <footer className="border-t border-slate-800 bg-slate-900 py-6 text-center text-xs text-slate-500">
-        © {new Date().getFullYear()} Royal Timepieces. All rights reserved.
+        © 2026 Royal Timepieces. All rights reserved.
       </footer>
     </div>
   );
