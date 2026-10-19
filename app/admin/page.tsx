@@ -66,7 +66,7 @@ export default function AdminCMSPage() {
         e.preventDefault();
         if (!name || !price) return;
 
-        const newWatch = {
+        const newWatch: Watch = {
             id: Date.now().toString(),
             name,
             brand: brand || "Exclusive Brand",
